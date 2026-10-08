@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     DATABASE_USER: str = "root"
     DATABASE_PASSWORD: str = ""
 
+    FRONTEND_URL: str = "http://localhost:5173"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

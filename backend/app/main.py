@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.config import settings
+
 from app.api.routes.categories import router as categories_router
 from app.api.routes.comparisons import router as comparisons_router
 from app.api.routes.educational_contents import (
@@ -21,7 +23,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        settings.FRONTEND_URL,
+        "http://localhost:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
