@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
+import { getErrorMessage } from "../../services/errors";
 import "./Catalog.css";
 
 
@@ -104,13 +105,12 @@ function Catalog() {
         requestError
       );
 
-      const apiMessage =
-        requestError.response?.data?.detail;
-
       setError(
-        apiMessage ||
-        "Não foi possível carregar os produtos. " +
-        "Verifique se a API está funcionando."
+        getErrorMessage(
+          requestError,
+          "Não foi possível carregar os produtos. " +
+          "Verifique se a API está funcionando."
+        )
       );
 
     } finally {

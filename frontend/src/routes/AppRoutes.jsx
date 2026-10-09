@@ -10,6 +10,7 @@ import Learn from "../pages/Learn/Learn";
 import Article from "../pages/Article/Article";
 import Catalog from "../pages/Catalog/Catalog";
 import About from "../pages/About/About";
+import NotFound from "../pages/NotFound/NotFound";
 
 
 function AppRoutes() {
@@ -56,6 +57,11 @@ function AppRoutes() {
         <Route
           path="/sobre"
           element={<About />}
+        />
+
+        <Route
+          path="*"
+          element={<NotFound />}
         />
 
       </Route>

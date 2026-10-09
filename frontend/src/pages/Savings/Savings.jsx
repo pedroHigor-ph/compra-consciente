@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import api from "../../services/api";
+import { getErrorMessage } from "../../services/errors";
 import "./Savings.css";
 
 
@@ -83,17 +84,13 @@ function Savings() {
         requestError
       );
 
-      const apiMessage =
-        requestError.response?.data?.detail;
-
-      if (apiMessage) {
-        setError(apiMessage);
-      } else {
-        setError(
+      setError(
+        getErrorMessage(
+          requestError,
           "Não foi possível calcular a economia. " +
           "Verifique se a API está funcionando e tente novamente."
-        );
-      }
+        )
+      );
 
     } finally {
       setIsLoading(false);

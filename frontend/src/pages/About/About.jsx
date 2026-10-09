@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import api from "../../services/api";
+import { getErrorMessage } from "../../services/errors";
 import "./About.css";
 
 
@@ -99,13 +100,12 @@ function About() {
         requestError
       );
 
-      const apiMessage =
-        requestError.response?.data?.detail;
-
       setFeedbackError(
-        apiMessage ||
-        "Não foi possível enviar seu feedback. " +
-        "Tente novamente."
+        getErrorMessage(
+          requestError,
+          "Não foi possível enviar seu feedback. " +
+          "Tente novamente."
+        )
       );
 
     } finally {

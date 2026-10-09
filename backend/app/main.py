@@ -14,6 +14,22 @@ from app.api.routes.products import router as products_router
 from app.api.routes.savings import router as savings_router
 
 
+def _allowed_origins() -> list[str]:
+    origins = [
+        origin.strip().rstrip("/")
+        for origin in settings.FRONTEND_URL.split(",")
+        if origin.strip()
+    ]
+
+    origins += [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+
+    # remove duplicados mantendo a ordem
+    return list(dict.fromkeys(origins))
+
+
 app = FastAPI(
     title="Compra Consciente API",
     description="API do projeto de extensão Compra Consciente",
@@ -23,11 +39,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        settings.FRONTEND_URL,
-        "http://localhost:5173",
-    ],
-    allow_credentials=True,
+    allow_origins=_allowed_origins(),
+    allow_origin_regex=settings.FRONTEND_ORIGIN_REGEX,
     allow_methods=["*"],
     allow_headers=["*"],
 )

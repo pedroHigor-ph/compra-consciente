@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import api from "../../services/api";
+import { getErrorMessage } from "../../services/errors";
 import "./Learn.css";
 
 
@@ -72,13 +73,12 @@ function Learn() {
         requestError
       );
 
-      const apiMessage =
-        requestError.response?.data?.detail;
-
       setError(
-        apiMessage ||
-        "Não foi possível carregar os conteúdos. " +
-        "Verifique se a API está funcionando."
+        getErrorMessage(
+          requestError,
+          "Não foi possível carregar os conteúdos. " +
+          "Verifique se a API está funcionando."
+        )
       );
 
     } finally {

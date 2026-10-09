@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import api from "../../services/api";
+import { getErrorMessage } from "../../services/errors";
 import "./Comparator.css";
 
 
@@ -186,17 +187,13 @@ function Comparator() {
         requestError
       );
 
-      const apiMessage =
-        requestError.response?.data?.detail;
-
-      if (apiMessage) {
-        setError(apiMessage);
-      } else {
-        setError(
+      setError(
+        getErrorMessage(
+          requestError,
           "Não foi possível realizar a comparação. " +
           "Verifique se a API está funcionando e tente novamente."
-        );
-      }
+        )
+      );
 
     } finally {
       setIsLoading(false);

@@ -153,4 +153,11 @@ O schema PostgreSQL está em `backend/sql/schema.postgres.sql`, e os dados de de
 
 O backend espera que o schema já exista; ele não cria nem apaga tabelas automaticamente. Se for migrar dados de um MySQL existente, faça um backup e carregue os dados em uma base Neon de teste antes da troca definitiva. Os arquivos deste projeto incluem apenas o seed demonstrativo, não dados de produção.
 
-No Vercel, configure dois projetos ligados ao mesmo repositório: um com diretório raiz `backend` para a API e outro com diretório raiz `frontend` para o Vite. No projeto do backend, configure `DATABASE_URL` e `FRONTEND_URL` com o domínio de produção do frontend. No projeto do frontend, configure `VITE_API_URL` com a URL pública da API terminada em `/api/v1`.
+No Vercel, configure dois projetos ligados ao mesmo repositório: um com diretório raiz `backend` para a API e outro com diretório raiz `frontend` para o Vite. No projeto do backend, configure `DATABASE_URL` como variável secreta e `FRONTEND_URL=https://compra-consciente-frontend.vercel.app`. No projeto do frontend, configure `VITE_API_URL` com a URL pública da API terminada em `/api/v1` (por exemplo, `https://<dominio-do-backend>/api/v1`). Essas variáveis devem ser cadastradas no painel da Vercel; não inclua a URL do banco no GitHub.
+
+### Notas de deploy (Vercel)
+
+- **Frontend:** `frontend/vercel.json` redireciona todas as rotas para `index.html` (necessário para o React Router). Use Node.js 22.x em *Settings → General → Node.js Version*. Se `VITE_API_URL` for alterada, faça um novo deploy, pois ela é embutida no build.
+- **Backend:** a versão do Python está fixada em `backend/.python-version`. Use a connection string *pooled* do Neon (host com `-pooler`).
+- **CORS:** `FRONTEND_URL` aceita um ou mais domínios separados por vírgula, sem barra no final. Para liberar também os deploys de preview, defina `FRONTEND_ORIGIN_REGEX` (ex.: `https://compra-consciente-frontend.*\.vercel\.app`).
+- **Saúde da API:** `GET /api/v1/health` verifica a API e `GET /api/v1/health/db` verifica a conexão com o banco (responde 503 se estiver indisponível).

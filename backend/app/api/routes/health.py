@@ -1,7 +1,11 @@
-from fastapi import APIRouter
+import logging
+
+from fastapi import APIRouter, HTTPException
 
 from app.database import test_connection
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -18,14 +22,17 @@ def database_health_check():
     try:
         test_connection()
 
-        return {
-            "status": "ok",
-            "database": "connected"
-        }
+    except Exception:
+        # O detalhe do erro vai para o log; não é exposto ao público
+        # (poderia revelar host, usuário ou opções de conexão).
+        logger.exception("Falha ao conectar ao banco de dados.")
 
-    except Exception as error:
-        return {
-            "status": "error",
-            "database": "disconnected",
-            "detail": str(error)
-        }
+        raise HTTPException(
+            status_code=503,
+            detail="Banco de dados indisponível."
+        )
+
+    return {
+        "status": "ok",
+        "database": "connected"
+    }
