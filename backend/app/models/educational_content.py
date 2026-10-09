@@ -1,5 +1,4 @@
-from sqlalchemy import Boolean, Enum, String, Text
-from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP
+from sqlalchemy import BigInteger, Boolean, DateTime, Enum, String, Text, func, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -9,7 +8,7 @@ class EducationalContent(Base):
     __tablename__ = "educational_contents"
 
     id: Mapped[int] = mapped_column(
-        INTEGER(unsigned=True),
+        BigInteger,
         primary_key=True,
         autoincrement=True
     )
@@ -43,7 +42,8 @@ class EducationalContent(Base):
             "desperdicio",
             "educacao",
             "outros",
-            name="educational_content_category"
+            name="educational_content_category",
+            native_enum=False
         ),
         nullable=False
     )
@@ -51,18 +51,18 @@ class EducationalContent(Base):
     published: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        server_default="1"
+        server_default=text("true")
     )
 
     created_at: Mapped[object] = mapped_column(
-        TIMESTAMP,
+        DateTime(timezone=True),
         nullable=False,
-        server_default="CURRENT_TIMESTAMP"
+        server_default=text("CURRENT_TIMESTAMP")
     )
 
     updated_at: Mapped[object] = mapped_column(
-        TIMESTAMP,
+        DateTime(timezone=True),
         nullable=False,
-        server_default="CURRENT_TIMESTAMP",
-        server_onupdate="CURRENT_TIMESTAMP"
+        server_default=text("CURRENT_TIMESTAMP"),
+        onupdate=func.now(),
     )

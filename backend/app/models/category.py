@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import String, Text
-from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP
+from sqlalchemy import BigInteger, DateTime, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -15,7 +14,7 @@ class Category(Base):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(
-        INTEGER(unsigned=True),
+        BigInteger,
         primary_key=True,
         autoincrement=True
     )
@@ -32,9 +31,9 @@ class Category(Base):
     )
 
     created_at: Mapped[object] = mapped_column(
-        TIMESTAMP,
+        DateTime(timezone=True),
         nullable=False,
-        server_default="CURRENT_TIMESTAMP"
+        server_default=text("CURRENT_TIMESTAMP")
     )
 
     products: Mapped[list["Product"]] = relationship(

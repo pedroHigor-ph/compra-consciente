@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Enum, ForeignKey, Numeric, String, Text
-from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP
+from sqlalchemy import BigInteger, DateTime, Enum, ForeignKey, Numeric, String, Text, func, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -15,13 +14,13 @@ class Product(Base):
     __tablename__ = "products"
 
     id: Mapped[int] = mapped_column(
-        INTEGER(unsigned=True),
+        BigInteger,
         primary_key=True,
         autoincrement=True
     )
 
     category_id: Mapped[int] = mapped_column(
-        INTEGER(unsigned=True),
+        BigInteger,
         ForeignKey(
             "categories.id",
             onupdate="CASCADE",
@@ -51,21 +50,25 @@ class Product(Base):
     )
 
     unit: Mapped[str] = mapped_column(
-        Enum("g", "kg", "ml", "L", "un", name="product_unit"),
+        Enum(
+            "g", "kg", "ml", "L", "un",
+            name="product_unit",
+            native_enum=False,
+        ),
         nullable=False
     )
 
     created_at: Mapped[object] = mapped_column(
-        TIMESTAMP,
+        DateTime(timezone=True),
         nullable=False,
-        server_default="CURRENT_TIMESTAMP"
+        server_default=text("CURRENT_TIMESTAMP")
     )
 
     updated_at: Mapped[object] = mapped_column(
-        TIMESTAMP,
+        DateTime(timezone=True),
         nullable=False,
-        server_default="CURRENT_TIMESTAMP",
-        server_onupdate="CURRENT_TIMESTAMP"
+        server_default=text("CURRENT_TIMESTAMP"),
+        onupdate=func.now(),
     )
 
     category: Mapped["Category"] = relationship(

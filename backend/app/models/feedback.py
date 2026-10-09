@@ -1,5 +1,4 @@
-from sqlalchemy import Enum, Text
-from sqlalchemy.dialects.mysql import INTEGER, TIMESTAMP, TINYINT
+from sqlalchemy import BigInteger, DateTime, Enum, SmallInteger, Text, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -9,13 +8,13 @@ class Feedback(Base):
     __tablename__ = "feedbacks"
 
     id: Mapped[int] = mapped_column(
-        INTEGER(unsigned=True),
+        BigInteger,
         primary_key=True,
         autoincrement=True
     )
 
     rating: Mapped[int] = mapped_column(
-        TINYINT(unsigned=True),
+        SmallInteger,
         nullable=False
     )
 
@@ -32,13 +31,14 @@ class Feedback(Base):
             "catalogo",
             "oficina",
             "outros",
-            name="feedback_activity_context"
+            name="feedback_activity_context",
+            native_enum=False
         ),
         nullable=False
     )
 
     created_at: Mapped[object] = mapped_column(
-        TIMESTAMP,
+        DateTime(timezone=True),
         nullable=False,
-        server_default="CURRENT_TIMESTAMP"
+        server_default=text("CURRENT_TIMESTAMP")
     )

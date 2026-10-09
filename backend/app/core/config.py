@@ -2,11 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    DATABASE_HOST: str = "localhost"
-    DATABASE_PORT: int = 3306
-    DATABASE_NAME: str = "compra_consciente"
-    DATABASE_USER: str = "root"
-    DATABASE_PASSWORD: str = ""
+    DATABASE_URL: str | None = None
+    POSTGRES_URL: str | None = None
+    POSTGRES_PRISMA_URL: str | None = None
 
     FRONTEND_URL: str = "http://localhost:5173"
 
